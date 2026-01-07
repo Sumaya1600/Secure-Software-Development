@@ -21,6 +21,7 @@ The system allows an administrator or instructor to:
 
 ### Core Features (Must-Have)
 
+These features are aligned with the coursework requirements and demonstrate the implemntation of the core backend, database and the web application covered in the moduke:
 -  **Create phishing campaigns**  
   Admin/Instructor can create campaigns with:
   - Campaign name
@@ -36,6 +37,7 @@ The system allows an administrator or instructor to:
   - Track opens: `/track/:token` (tracking pixel)
   - Track clicks: `/click/:token` (redirect through backend)
   - Track reports: `/report/:token` (when user reports the email)
+This approach ensures accuracy in user tracking whilst maintaining individuality between users.
 
 -  **Landing page with indicators**  
   When a user clicks a phishing link, they are redirected to an **Education Landing Page** explaining:
@@ -49,6 +51,7 @@ The system allows an administrator or instructor to:
   - Total recipients
   - Open rate, click rate, report rate
   - Basic chart of campaign performance
+  - Data derived from logged tracking events stored in the database
 
 ---
 
