@@ -103,6 +103,7 @@ Audit logs are good as they offer traceability and accountability for security r
 
 ## 3. Technology Stack
 
+These technologies prioritise securiy, efficiency and individuality for the courssework requirements:
 ### Frontend
 
 - **React** (Create React App)
@@ -110,7 +111,7 @@ Audit logs are good as they offer traceability and accountability for security r
 - **Axios** for HTTP requests
 - **Recharts** for basic graphs/visualisations
 - **Tailwind CSS** for styling utility classes
-
+  
 ### Backend
 
 - **Node.js** + **Express**
@@ -139,7 +140,7 @@ Audit logs are good as they offer traceability and accountability for security r
   - SMTP port: `1025`
   - Web UI: `http://localhost:8025`
   - All outgoing emails are captured in MailHog instead of the real internet.
-
+  This ensures that phishing simulations can be tested safely without delivering emails to the actual users.
 ---
 
 ## 4. Prerequisites
