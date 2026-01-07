@@ -57,6 +57,7 @@ This approach ensures accuracy in user tracking whilst maintaining individuality
 
 ### Security Requirements
 
+These requirements are designed to protect system and data integrity, whilst implementing necessary functionalities:
 -  **Role-Based Access Control (RBAC)**  
   Roles:
   - **Admin** – full control: manage users, campaigns, launch/delete campaigns.
@@ -66,6 +67,7 @@ This approach ensures accuracy in user tracking whilst maintaining individuality
 -  **Input sanitisation**  
   - `express-validator` used on backend routes to validate and sanitise inputs.
   - Dangerous characters are stripped or escaped before being stored or rendered.
+  All of which reduces the risk of injection and other attacks.
 
 -  **CSRF protection**  
   - `csurf` middleware applied to write operations (e.g. campaign creation, launch).
@@ -83,6 +85,7 @@ This approach ensures accuracy in user tracking whilst maintaining individuality
     - action (e.g. `CREATE_CAMPAIGN`, `LAUNCH_CAMPAIGN`, `DELETE_CAMPAIGN`, `LOGIN`)
     - resource type & id
     - timestamp and IP
+Audit logs are good as they offer traceability and accountability for security risked operations.
 
 ---
 
