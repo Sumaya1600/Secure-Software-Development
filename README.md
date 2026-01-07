@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-This project is a **web-based phishing simulation and awareness portal** designed to let staff or students safely experience phishing emails and learn how to recognise them. The platform is designed for educational use and is operated in a controlled environment, aimed to improve cybersecurity awareness, whilst avoiding real user security risks.
+This project is a **web-based phishing simulation and awareness portal** designed to let staff or students safely experience phishing emails and learn how to recognise them. The platform is designed for educational use and is operated in a controlled environment, aimed to improve cybersecurity awareness, whilst avoiding real user security risks. It provides tangible insights into user behaviour to predict future phishing attacks, which meets organisation security requirements.
 
 The system allows an administrator or instructor to:
 
@@ -11,6 +11,7 @@ The system allows an administrator or instructor to:
 - Track when emails are **opened, clicked, or reported**.
 - Show a **landing page** explaining why the email was suspicious.
 - View a **dashboard** with core metrics (open, click, report rates).
+- Generates reports to evaluate user awareness trends and identify areas needing fixes.
 
 > **Note:** The original brief suggested PostgreSQL. For simplicity and to align with my current skills, this implementation uses **MySQL (via XAMPP + phpMyAdmin)** instead. This choice is explained in the Technology Stack section.
 
