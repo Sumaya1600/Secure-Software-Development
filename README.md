@@ -4,7 +4,7 @@
 
 This project is a **web-based phishing simulation and awareness portal** designed to let staff or students safely experience phishing emails and learn how to recognise them. The platform is designed for educational use and is operated in a controlled environment, aimed to improve cybersecurity awareness, whilst avoiding real user security risks. It provides tangible insights into user behaviour to predict future phishing attacks, which meets organisation security requirements.
 
-The system allows an administrator or instructor to:
+The system allows an administrator, instructor or a viewer to:
 
 - Create and schedule phishing campaigns.
 - Send templated phishing emails with personalised variables.
@@ -21,7 +21,7 @@ The system allows an administrator or instructor to:
 
 ### Core Features (Must-Have)
 
-These features are aligned with the coursework requirements and demonstrate the implemntation of the core backend, database and the web application covered in the moduke:
+These features are aligned with our coursework requirements and demonstrate the implemntation of the core backend, database and the web application covered in the moduke:
 -  **Create phishing campaigns**  
   Admin/Instructor can create campaigns with:
   - Campaign name
@@ -154,8 +154,273 @@ These technologies prioritise securiy, efficiency and individuality for the cour
 ---
 
 ## 5. Installation & Setup
+Installation & Setup
+Step 1 – Clone or Download the Project
+git clone https://github.com/<your-username>/Secure-Software-Development.git
+cd phishing-portal
 
-### Step 1 – Clone / Download the Project
+
+Alternatively, download the ZIP and extract it locally.
+
+Step 2 – Backend Setup
+cd backend
+npm install
+
+
+Create a .env file in the backend directory:
+
+PORT=5000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=phishing_portal
+JWT_SECRET=supersecretkey
+FRONTEND_URL=http://localhost:3000
+
+
+Start the backend:
+
+npm run dev
+
+
+Confirm the backend is running:
+
+http://localhost:5000/health
+
+Step 3 – Frontend Setup
+cd frontend
+npm install
+npm start
+
+
+Open:
+
+http://localhost:3000/login
+
+Step 4 – Database Setup
+
+Start XAMPP
+
+Enable MySQL
+
+Open phpMyAdmin
+
+Create database: phishing_portal
+
+Import the provided SQL schema
+
+
+6. Threat Model (STRIDE Methodology)
+6.1 Methodology
+
+This project uses the STRIDE threat modelling framework, which categorises threats into:
+
+Spoofing
+
+Tampering
+
+Repudiation
+
+Information Disclosure
+
+Denial of Service
+
+Elevation of Privilege
+
+STRIDE is suitable for this system because it:
+
+Handles authenticated users with different privilege levels
+
+Stores behavioural security data
+
+Exposes public tracking endpoints
+
+Performs sensitive administrative actions
+
+6.2 System Overview & Attack Surface
+Key Components
+
+React frontend (login, dashboard, campaign creation)
+
+Node.js / Express backend
+
+MySQL database
+
+Public tracking endpoints (/track, /click, /report)
+
+Attack Surface
+Component	Description
+Authentication	Login endpoint
+Campaign Management	Create, launch, delete campaigns
+Tracking Endpoints	Public token-based endpoints
+Database	Campaign, recipient, event storage
+Frontend	User-controlled inputs
+6.3 Threat Identification (STRIDE)
+Spoofing
+
+Threat: Attacker attempts to log in as an admin.
+Mitigation: bcrypt password hashing, JWT authentication, RBAC enforcement.
+
+Tampering
+
+Threat: Modification of campaign or event data.
+Mitigation: Parameterised SQL queries, backend validation.
+
+Repudiation
+
+Threat: Admin denies performing actions.
+Mitigation: Audit logging of all sensitive operations.
+
+Information Disclosure
+
+Threat: Exposure of recipient email addresses.
+Mitigation: Token-based tracking, separation of recipients and results.
+
+Denial of Service
+
+Threat: Flooding tracking endpoints.
+Mitigation: Lightweight queries; rate limiting noted as future improvement.
+
+Elevation of Privilege
+
+Threat: Viewer gains admin permissions.
+Mitigation: Backend RBAC enforcement and frontend route restrictions.
+
+6.4 Risk Matrix
+Threat	Likelihood	Impact	Risk
+Credential brute force	Medium	High	High
+Privilege escalation	Low	High	Medium
+Token enumeration	Low	Medium	Medium
+Tracking abuse	Medium	Low	Medium
+Action repudiation	Low	Medium	Low
+6.5 Attack Scenarios
+
+Scenario 1: Brute Force Login
+Attacker attempts repeated login attempts.
+Mitigated by password hashing and recommended rate limiting.
+
+Scenario 2: Token Guessing
+Attacker attempts to guess tracking tokens.
+Low exploitability due to UUID randomness.
+
+Scenario 3: Privilege Escalation
+Viewer attempts admin actions.
+Blocked by RBAC checks and JWT role validation.
+
+6.6 Business Impact Analysis
+
+A successful attack could:
+
+Undermine confidence in security training
+
+Skew awareness metrics
+
+Expose staff behavioural data
+
+Impact is intentionally limited because:
+
+No real credentials are collected
+
+Mail sandbox prevents real email delivery
+
+System is for training use only
+
+6.7 Security Testing Plan
+
+Unit testing of tracking endpoints
+
+Manual RBAC validation
+
+SQL injection attempts
+
+Audit log verification
+
+Dashboard performance testing
+
+7. Technical Security Assessment Report
+7.1 Executive Summary
+
+This security assessment evaluates the Phishing Simulation & Awareness Portal, focusing on authentication, access control, tracking mechanisms, and data storage. The application demonstrates a strong security baseline suitable for educational use, with minor areas identified for enhancement.
+
+7.2 Methodology
+
+Manual testing (browser dev tools, Postman)
+
+Static code review
+
+Database inspection (phpMyAdmin)
+
+STRIDE threat modelling
+
+OWASP Top 10 mapping
+
+7.3 Findings
+Finding 1: No Login Rate Limiting
+
+Risk: Brute force attempts
+
+Impact: Admin compromise
+
+CVSS: 6.5 (Medium)
+
+Recommendation: Implement express-rate-limit
+
+Finding 2: Public Tracking Endpoint Abuse
+
+Risk: Metric inflation
+
+Impact: Data integrity loss
+
+CVSS: 4.3 (Low)
+
+Recommendation: Add rate limiting and anomaly detection
+
+Finding 3: CSRF Tokens Not Required for JWT Header Auth
+
+Risk: Low due to JWT in Authorization header
+
+CVSS: 3.1 (Low)
+
+Recommendation: Document CSRF design and add origin checks if required
+
+7.4 Evidence
+
+Dashboard screenshots showing metrics
+
+phpMyAdmin screenshots of events, recipients, and audit_logs
+
+Backend logs confirming admin actions
+
+Code review of RBAC checks
+
+7.5 Remediation Summary
+
+Add rate limiting to login and tracking endpoints
+
+Log failed login attempts
+
+Implement automated campaign scheduler (future work)
+
+Add monitoring for repeated token usage
+
+8. Ethical Use & Safeguards (Reflection)
+
+This platform is designed for ethical cybersecurity education, not punishment. Safeguards include:
+
+Clear training disclaimers
+
+No collection of real credentials
+
+Mail sandbox usage
+
+Immediate educational feedback
+
+Role-based access control
+
+Audit logging
+
+The system promotes a learning-first security culture, aligning with modern organisational awareness training principles.
+
 
 ```bash
 git clone <your-repo-url> phishing-portal
