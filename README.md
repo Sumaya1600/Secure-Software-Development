@@ -1,6 +1,6 @@
 # Phishing Simulation & Awareness Portal
 
-## 1. 
+## 1. Overview
 
 This project is a **web-based phishing simulation and awareness portal** designed to let staff or students safely experience phishing emails and learn how to recognise them. The platform is designed for educational use and is operated in a controlled environment, aimed to improve cybersecurity awareness, whilst avoiding real user security risks. It provides tangible insights into user behaviour to predict future phishing attacks, which meets organisation security requirements.
 
