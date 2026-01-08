@@ -1,0 +1,45 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  password String
+  role     String   // admin, instructor, viewer
+  auditLogs AuditLog[]
+}
+
+model Campaign {
+  id          Int       @id @default(autoincrement())
+  name        String
+  subject     String
+  emailBody   String
+  sendDate    DateTime
+  results     Result[]
+}
+
+model Result {
+  id         Int      @id @default(autoincrement())
+  recipient  String
+  opened     Boolean  @default(false)
+  clicked    Boolean  @default(false)
+  reported   Boolean  @default(false)
+  token      String   @unique
+
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  campaignId Int
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  action    String
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  createdAt DateTime @default(now())
+}
