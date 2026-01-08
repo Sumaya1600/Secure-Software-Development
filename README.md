@@ -192,7 +192,6 @@ cd frontend
 npm install
 npm start
 
-
 Open:
 
 http://localhost:3000/login
@@ -208,6 +207,7 @@ Open phpMyAdmin
 Create database: phishing_portal
 
 Import the provided SQL schema
+
 
 
 6. Threat Model (STRIDE Methodology)
@@ -420,8 +420,3 @@ Role-based access control
 Audit logging
 
 The system promotes a learning-first security culture, aligning with modern organisational awareness training principles.
-
-
-```bash
-git clone <your-repo-url> phishing-portal
-cd phishing-portal
