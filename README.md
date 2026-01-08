@@ -208,215 +208,256 @@ Create database: phishing_portal
 
 Import the provided SQL schema
 
+---
 
+## 6. Threat Model (STRIDE Methodology)
 
-6. Threat Model (STRIDE Methodology)
-6.1 Methodology
+### 6.1 Threat Modelling Methodology
 
-This project uses the STRIDE threat modelling framework, which categorises threats into:
+This project uses the **STRIDE threat modelling framework**, which categorises threats into six classes:
 
-Spoofing
+- **S**poofing  
+- **T**ampering  
+- **R**epudiation  
+- **I**nformation Disclosure  
+- **D**enial of Service  
+- **E**levation of Privilege  
 
-Tampering
+STRIDE was selected because the system includes authenticated users, public-facing tracking endpoints, role-based access control, and sensitive administrative actions. This methodology provides a structured and systematic approach to identifying risks within the phishing simulation domain.
 
-Repudiation
+---
 
-Information Disclosure
+### 6.2 System Overview and Attack Surface
 
-Denial of Service
+#### System Components
 
-Elevation of Privilege
+- React frontend (login, dashboard, campaign creation, education page)
+- Node.js + Express backend
+- MySQL database
+- Public tracking endpoints:
+  - `/track/:token`
+  - `/click/:token`
+  - `/report/:token`
 
-STRIDE is suitable for this system because it:
+#### Attack Surface Analysis
 
-Handles authenticated users with different privilege levels
+| Component | Description |
+|---------|------------|
+| Authentication | Login endpoint accepting user credentials |
+| Campaign Management | Create, launch, delete campaign actions |
+| Tracking Endpoints | Public token-based URLs |
+| Database | Stores campaign, recipient, and event data |
+| Frontend | User input forms and routing |
 
-Stores behavioural security data
+---
 
-Exposes public tracking endpoints
+### 6.3 Threat Identification (STRIDE)
 
-Performs sensitive administrative actions
+#### Spoofing
 
-6.2 System Overview & Attack Surface
-Key Components
+**Threat:** An attacker attempts to impersonate an admin or instructor.  
 
-React frontend (login, dashboard, campaign creation)
+**Mitigation:** Password hashing (bcrypt), JWT authentication, role-based access control.
 
-Node.js / Express backend
+---
 
-MySQL database
+#### Tampering
 
-Public tracking endpoints (/track, /click, /report)
+**Threat:** Modification of campaign or tracking data.  
 
-Attack Surface
-Component	Description
-Authentication	Login endpoint
-Campaign Management	Create, launch, delete campaigns
-Tracking Endpoints	Public token-based endpoints
-Database	Campaign, recipient, event storage
-Frontend	User-controlled inputs
-6.3 Threat Identification (STRIDE)
-Spoofing
+**Mitigation:** Parameterised SQL queries, backend validation.
 
-Threat: Attacker attempts to log in as an admin.
-Mitigation: bcrypt password hashing, JWT authentication, RBAC enforcement.
+---
 
-Tampering
+#### Repudiation
 
-Threat: Modification of campaign or event data.
-Mitigation: Parameterised SQL queries, backend validation.
+**Threat:** Users deny performing actions such as launching or deleting campaigns.  
 
-Repudiation
+**Mitigation:** Audit logging of all sensitive administrative actions.
 
-Threat: Admin denies performing actions.
-Mitigation: Audit logging of all sensitive operations.
+---
 
-Information Disclosure
+#### Information Disclosure
 
-Threat: Exposure of recipient email addresses.
-Mitigation: Token-based tracking, separation of recipients and results.
+**Threat:** Exposure of recipient emails or behavioural data.  
 
-Denial of Service
+**Mitigation:** Token-based tracking and separation of recipients and events.
 
-Threat: Flooding tracking endpoints.
-Mitigation: Lightweight queries; rate limiting noted as future improvement.
+---
 
-Elevation of Privilege
+#### Denial of Service
 
-Threat: Viewer gains admin permissions.
-Mitigation: Backend RBAC enforcement and frontend route restrictions.
+**Threat:** Flooding public tracking endpoints with requests.  
 
-6.4 Risk Matrix
-Threat	Likelihood	Impact	Risk
-Credential brute force	Medium	High	High
-Privilege escalation	Low	High	Medium
-Token enumeration	Low	Medium	Medium
-Tracking abuse	Medium	Low	Medium
-Action repudiation	Low	Medium	Low
-6.5 Attack Scenarios
+**Mitigation:** Lightweight queries; rate limiting identified as a future enhancement.
 
-Scenario 1: Brute Force Login
-Attacker attempts repeated login attempts.
-Mitigated by password hashing and recommended rate limiting.
+---
 
-Scenario 2: Token Guessing
-Attacker attempts to guess tracking tokens.
-Low exploitability due to UUID randomness.
+#### Elevation of Privilege
 
-Scenario 3: Privilege Escalation
-Viewer attempts admin actions.
-Blocked by RBAC checks and JWT role validation.
+**Threat:** Viewer attempts to gain admin privileges.  
 
-6.6 Business Impact Analysis
+**Mitigation:** Backend RBAC enforcement and frontend route protection.
+
+---
+
+### 6.4 Risk Matrix
+
+| Threat | Likelihood | Impact | Risk Level |
+|------|------------|--------|------------|
+| Credential brute force | Medium | High | High |
+| Privilege escalation | Low | High | Medium |
+| Token enumeration | Low | Medium | Medium |
+| Tracking abuse | Medium | Low | Medium |
+| Action repudiation | Low | Medium | Low |
+
+---
+
+### 6.5 Attack Scenarios
+
+#### Scenario 1: Credential Brute Force
+
+An attacker repeatedly attempts to guess login credentials.
+
+- **Exploitability:** Medium  
+- **Impact:** Full administrative access  
+- **Controls:** bcrypt hashing, JWT authentication, recommended rate limiting
+
+---
+
+#### Scenario 2: Tracking Token Guessing
+
+An attacker attempts to guess valid tracking tokens.
+
+- **Exploitability:** Low (UUID randomness)  
+- **Impact:** False event generation  
+- **Controls:** UUID-based tokens, no sensitive data exposure
+
+---
+
+#### Scenario 3: Privilege Escalation
+
+A viewer attempts to access admin-only endpoints.
+
+- **Exploitability:** Low  
+- **Impact:** Campaign manipulation  
+- **Controls:** RBAC enforced on backend and frontend
+
+---
+
+### 6.6 Impact Analysis (Business Context)
 
 A successful attack could:
 
-Undermine confidence in security training
+- Undermine trust in security awareness training
+- Skew organisational phishing metrics
+- Expose staff training behaviour
 
-Skew awareness metrics
+However, risk is intentionally limited because:
 
-Expose staff behavioural data
+- No real credentials are collected
+- A mail sandbox is used
+- The platform operates only in training environments
 
-Impact is intentionally limited because:
+---
 
-No real credentials are collected
+### 6.7 Security Testing Plan
 
-Mail sandbox prevents real email delivery
+- Unit tests for tracking endpoints
+- Manual RBAC testing across all roles
+- SQL injection attempts (blocked by parameterised queries)
+- Audit log verification
+- Dashboard performance testing
 
-System is for training use only
+---
 
-6.7 Security Testing Plan
+## 7. Technical Security Assessment Report
 
-Unit testing of tracking endpoints
+### 7.1 Executive Summary
 
-Manual RBAC validation
+This assessment evaluates the security posture of the Phishing Simulation & Awareness Portal, focusing on authentication, access control, tracking mechanisms, and data storage. The system demonstrates a strong baseline security posture appropriate for an educational phishing simulation platform.
 
-SQL injection attempts
+---
 
-Audit log verification
+### 7.2 Assessment Methodology
 
-Dashboard performance testing
+- Static code analysis of backend routes and controllers
+- Manual testing using browser developer tools and Postman
+- Database inspection via phpMyAdmin
+- STRIDE-based threat modelling
+- OWASP Top 10 considerations
 
-7. Technical Security Assessment Report
-7.1 Executive Summary
+---
 
-This security assessment evaluates the Phishing Simulation & Awareness Portal, focusing on authentication, access control, tracking mechanisms, and data storage. The application demonstrates a strong security baseline suitable for educational use, with minor areas identified for enhancement.
+### 7.3 Security Findings
 
-7.2 Methodology
+#### Finding 1: No Login Rate Limiting
 
-Manual testing (browser dev tools, Postman)
+**Description:** Login endpoint does not restrict repeated attempts.  
 
-Static code review
+**Impact:** Risk of brute force attacks.  
 
-Database inspection (phpMyAdmin)
+**CVSS v3.1:** 6.5 (Medium)  
 
-STRIDE threat modelling
+**Recommendation:** Implement `express-rate-limit`.
 
-OWASP Top 10 mapping
+---
 
-7.3 Findings
-Finding 1: No Login Rate Limiting
+#### Finding 2: Public Tracking Endpoint Abuse
 
-Risk: Brute force attempts
+**Description:** Tracking endpoints are publicly accessible.  
 
-Impact: Admin compromise
+**Impact:** Metric manipulation.  
 
-CVSS: 6.5 (Medium)
+**CVSS v3.1:** 4.3 (Low)  
 
-Recommendation: Implement express-rate-limit
+**Recommendation:** Add rate limiting and monitoring.
 
-Finding 2: Public Tracking Endpoint Abuse
+---
 
-Risk: Metric inflation
+#### Finding 3: CSRF Tokens Not Required for JWT Header Auth
 
-Impact: Data integrity loss
+**Description:** CSRF tokens are not enforced on all forms.  
 
-CVSS: 4.3 (Low)
+**Impact:** Low risk due to Authorization header usage.  
 
-Recommendation: Add rate limiting and anomaly detection
+**CVSS v3.1:** 3.1 (Low)  
 
-Finding 3: CSRF Tokens Not Required for JWT Header Auth
+**Recommendation:** Document CSRF design and optionally add origin checks.
 
-Risk: Low due to JWT in Authorization header
+---
 
-CVSS: 3.1 (Low)
+### 7.4 Evidence
 
-Recommendation: Document CSRF design and add origin checks if required
+- Screenshots of dashboard metrics
+- phpMyAdmin screenshots of `events`, `recipients`, and `audit_logs`
+- Backend logs showing audit entries
+- Code review of RBAC checks
 
-7.4 Evidence
+---
 
-Dashboard screenshots showing metrics
+### 7.5 Remediation Summary
 
-phpMyAdmin screenshots of events, recipients, and audit_logs
+- Add rate limiting to login and tracking endpoints
+- Log failed authentication attempts
+- Implement automated campaign scheduling
+- Monitor repeated token usage
 
-Backend logs confirming admin actions
+---
 
-Code review of RBAC checks
+## 8. Ethical Use and Safeguards
 
-7.5 Remediation Summary
+This platform is designed for ethical security awareness training. Safeguards include:
 
-Add rate limiting to login and tracking endpoints
+- Clear training disclaimers
+- No collection of real credentials
+- Use of a mail sandbox
+- Immediate educational feedback
+- Role-based access control
+- Audit logging of admin actions
 
-Log failed login attempts
+The system prioritises learning and awareness rather than punishment.
 
-Implement automated campaign scheduler (future work)
+---
 
-Add monitoring for repeated token usage
 
-8. Ethical Use & Safeguards (Reflection)
-
-This platform is designed for ethical cybersecurity education, not punishment. Safeguards include:
-
-Clear training disclaimers
-
-No collection of real credentials
-
-Mail sandbox usage
-
-Immediate educational feedback
-
-Role-based access control
-
-Audit logging
-
-The system promotes a learning-first security culture, aligning with modern organisational awareness training principles.
