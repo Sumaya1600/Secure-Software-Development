@@ -449,12 +449,7 @@ This assessment evaluates the security posture of the Phishing Simulation & Awar
 
 This platform is designed for ethical security awareness training. Safeguards include:
 
-- Clear training disclaimers
-- No collection of real credentials
-- Use of a mail sandbox
-- Immediate educational feedback
-- Role-based access control
-- Audit logging of admin actions
+
 
 The system prioritises learning and awareness rather than punishment.
 
